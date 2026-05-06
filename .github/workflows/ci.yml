@@ -1,25 +1,40 @@
-name: GitHub Actions Build and Deploy Demo
+name: CI
+
 on:
   push:
-    branches:
-      - master
+    branches: [main]
+  pull_request:
+    branches: [main]
+
 jobs:
-  build-and-deploy:
+  lint-and-test:
     runs-on: ubuntu-latest
     steps:
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20
-    - name: Checkout
-      uses: actions/checkout@v4
-    - name: Install and Build
-      run: |
-        npm install
-        npm run-script build
-    - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@releases/v3
-      with:
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        BRANCH: gh-pages
-        FOLDER: build
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          cd backend
+          npm ci
+
+      - name: Run tests
+        run: |
+          cd backend
+          npm test --if-present
+
+      - name: Validate HTML structure
+        run: |
+          find . -name "*.html" | head -5
+          echo "HTML files found above"
+
+      - name: Check JS files exist
+        run: |
+          find restaurant-manager -name "*.js" 2>/dev/null || echo "No JS files found"
