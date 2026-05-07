@@ -3,16 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
-    "react-scripts": "5.x"
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
   },
-  "homepage": "https://ruanyf.github.io/github-actions-demo",
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.1",
+    "@vitejs/plugin-react": "^5.1.2",
+    "jsdom": "^27.3.0",
+    "vite": "^7.3.0",
+    "vitest": "^4.0.15"
+  },
+  "homepage": "https://saleemadnan.github.io/github-actions-demo",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "vite --host 127.0.0.1",
+    "build": "vite build --base=/github-actions-demo/",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "vitest run --environment jsdom",
+    "test:ci": "vitest run --environment jsdom",
+    "ci": "npm run test:ci && npm run build"
   },
   "eslintConfig": {
     "extends": "react-app"
